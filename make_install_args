@@ -1,0 +1,1 @@
+--prefix=%{?buildroot:%{buildroot}}%{_prefix} --actual-prefix=%{_prefix} --libdir=%{_lib}

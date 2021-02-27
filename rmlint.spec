@@ -5,50 +5,40 @@
 %define keepstatic 1
 Name     : rmlint
 Version  : 2.10.1
-Release  : 1
+Release  : 2
 URL      : file:///aot/build/clearlinux/packages/rmlint/rmlint-v2.10.1.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/rmlint/rmlint-v2.10.1.tar.gz
 Summary  : Finds space waste and other broken things on your filesystem
 Group    : Development/Tools
 License  : GPL-2.0 GPL-3.0 LGPL-2.1
+Requires: rmlint-bin = %{version}-%{release}
+Requires: rmlint-data = %{version}-%{release}
+Requires: rmlint-locales = %{version}-%{release}
+Requires: rmlint-man = %{version}-%{release}
+Requires: rmlint-python = %{version}-%{release}
+Requires: rmlint-python3 = %{version}-%{release}
 BuildRequires : Sphinx
 BuildRequires : buildreq-distutils3
 BuildRequires : buildreq-scons
-BuildRequires : cairo-dev
-BuildRequires : cairomm-dev
 BuildRequires : elfutils
 BuildRequires : elfutils-dev
 BuildRequires : fontconfig-dev
 BuildRequires : freetype-dev
 BuildRequires : gettext
 BuildRequires : gettext-dev
-BuildRequires : giflib
-BuildRequires : giflib-dev
-BuildRequires : giflib-staticdev
-BuildRequires : git
 BuildRequires : glib-dev
 BuildRequires : gobject-introspection
 BuildRequires : gobject-introspection-dev
 BuildRequires : gtk3
 BuildRequires : gtk3-dev
 BuildRequires : json-glib
-BuildRequires : libjpeg-turbo
-BuildRequires : libjpeg-turbo-dev
-BuildRequires : libjpeg-turbo-staticdev
+BuildRequires : json-glib-dev
 BuildRequires : librsvg
 BuildRequires : librsvg-dev
-BuildRequires : openjpeg
-BuildRequires : openjpeg-dev
-BuildRequires : openjpeg-staticdev
-BuildRequires : pango
-BuildRequires : pango-dev
 BuildRequires : pkg-config
 BuildRequires : pygobject
 BuildRequires : pygobject-dev
 BuildRequires : scons
-BuildRequires : tiff
-BuildRequires : tiff-dev
-BuildRequires : tiff-staticdev
 BuildRequires : util-linux
 BuildRequires : util-linux-dev
 # Suppress stripping binaries
@@ -58,6 +48,57 @@ BuildRequires : util-linux-dev
 %description
 rmlint finds space waste and other broken things and offers to remove it. It is
 especially an extremely fast tool to remove duplicates from your filesystem.
+
+%package bin
+Summary: bin components for the rmlint package.
+Group: Binaries
+Requires: rmlint-data = %{version}-%{release}
+
+%description bin
+bin components for the rmlint package.
+
+
+%package data
+Summary: data components for the rmlint package.
+Group: Data
+
+%description data
+data components for the rmlint package.
+
+
+%package locales
+Summary: locales components for the rmlint package.
+Group: Default
+
+%description locales
+locales components for the rmlint package.
+
+
+%package man
+Summary: man components for the rmlint package.
+Group: Default
+
+%description man
+man components for the rmlint package.
+
+
+%package python
+Summary: python components for the rmlint package.
+Group: Default
+Requires: rmlint-python3 = %{version}-%{release}
+
+%description python
+python components for the rmlint package.
+
+
+%package python3
+Summary: python3 components for the rmlint package.
+Group: Default
+Requires: python3-core
+
+%description python3
+python3 components for the rmlint package.
+
 
 %prep
 %setup -q -n rmlint
@@ -90,10 +131,37 @@ export CMAKE_AR=gcc-ar
 export CMAKE_RANLIB=gcc-ranlib
 export CMAKE_NM=gcc-nm
 ## altflags1 end
-scons %{?_smp_mflags}
+%scons_config O=3 O=3 --with-libelf --with-gettext --with-fiemap --with-blkid --with-json-glib --with-gui --prefix=%{?buildroot:%{buildroot}}%{_prefix} --actual-prefix=%{_prefix} --libdir=%{_lib}
 
 %install
-scons
+%scons_install O=3  %{?_smp_mflags}  O=3 V=1 VERBOSE=1 --prefix=%{?buildroot:%{buildroot}}%{_prefix} --actual-prefix=%{_prefix} --libdir=%{_lib}
+%find_lang rmlint
 
 %files
 %defattr(-,root,root,-)
+
+%files bin
+%defattr(-,root,root,-)
+/usr/bin/rmlint
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/applications/shredder.desktop
+/usr/share/glib-2.0/schemas/gschemas.compiled
+/usr/share/glib-2.0/schemas/org.gnome.Shredder.gschema.xml
+/usr/share/icons/hicolor/scalable/apps/shredder.svg
+
+%files man
+%defattr(0644,root,root,0755)
+/usr/share/man/man1/rmlint.1.gz
+
+%files python
+%defattr(-,root,root,-)
+
+%files python3
+%defattr(-,root,root,-)
+/usr/lib/python3*/*
+
+%files locales -f rmlint.lang
+%defattr(-,root,root,-)
+
