@@ -1,1 +1,1 @@
-O=3 --with-libelf --with-gettext --with-fiemap --with-blkid --with-json-glib --with-gui --prefix=%{?buildroot:%{buildroot}}%{_prefix} --actual-prefix=%{_prefix} --libdir=%{_lib}
+O=3 V=1 VERBOSE=1 --with-libelf --with-gettext --with-fiemap --with-blkid --with-json-glib --with-gui --prefix=%{?buildroot:%{buildroot}}%{_prefix} --actual-prefix=%{_prefix} --libdir=%{_lib}

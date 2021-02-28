@@ -1,2 +1,31 @@
 # This file contains additional runtime requirements that did not get
 # picked up automatically. One name per line, no whitespace.
+compat-gtksourceview-soname3
+compat-gtksourceview-soname3-dev
+elfutils
+elfutils-dev
+fontconfig-dev
+freetype-dev
+gettext
+gettext-dev
+glib-dev
+gobject-introspection
+gobject-introspection-dev
+gtk3
+gtk3-dev
+gtksourceview
+gtksourceview-dev
+json-glib
+json-glib-dev
+libgdiplus
+libgdiplus-dev
+libgdiplus-staticdev
+librsvg
+librsvg-dev
+pkg-config
+pygobject
+pygobject-dev
+scons
+Sphinx
+util-linux
+util-linux-dev

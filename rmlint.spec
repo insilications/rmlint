@@ -5,7 +5,7 @@
 %define keepstatic 1
 Name     : rmlint
 Version  : 2.10.1
-Release  : 2
+Release  : 6
 URL      : file:///aot/build/clearlinux/packages/rmlint/rmlint-v2.10.1.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/rmlint/rmlint-v2.10.1.tar.gz
 Summary  : Finds space waste and other broken things on your filesystem
@@ -17,9 +17,40 @@ Requires: rmlint-locales = %{version}-%{release}
 Requires: rmlint-man = %{version}-%{release}
 Requires: rmlint-python = %{version}-%{release}
 Requires: rmlint-python3 = %{version}-%{release}
+Requires: Sphinx
+Requires: compat-gtksourceview-soname3
+Requires: compat-gtksourceview-soname3-dev
+Requires: elfutils
+Requires: elfutils-dev
+Requires: fontconfig-dev
+Requires: freetype-dev
+Requires: gettext
+Requires: gettext-dev
+Requires: glib-dev
+Requires: gobject-introspection
+Requires: gobject-introspection-dev
+Requires: gtk3
+Requires: gtk3-dev
+Requires: gtksourceview
+Requires: gtksourceview-dev
+Requires: json-glib
+Requires: json-glib-dev
+Requires: libgdiplus
+Requires: libgdiplus-dev
+Requires: libgdiplus-staticdev
+Requires: librsvg
+Requires: librsvg-dev
+Requires: pkg-config
+Requires: pygobject
+Requires: pygobject-dev
+Requires: scons
+Requires: util-linux
+Requires: util-linux-dev
 BuildRequires : Sphinx
 BuildRequires : buildreq-distutils3
 BuildRequires : buildreq-scons
+BuildRequires : compat-gtksourceview-soname3
+BuildRequires : compat-gtksourceview-soname3-dev
 BuildRequires : elfutils
 BuildRequires : elfutils-dev
 BuildRequires : fontconfig-dev
@@ -31,8 +62,13 @@ BuildRequires : gobject-introspection
 BuildRequires : gobject-introspection-dev
 BuildRequires : gtk3
 BuildRequires : gtk3-dev
+BuildRequires : gtksourceview
+BuildRequires : gtksourceview-dev
 BuildRequires : json-glib
 BuildRequires : json-glib-dev
+BuildRequires : libgdiplus
+BuildRequires : libgdiplus-dev
+BuildRequires : libgdiplus-staticdev
 BuildRequires : librsvg
 BuildRequires : librsvg-dev
 BuildRequires : pkg-config
@@ -131,10 +167,32 @@ export CMAKE_AR=gcc-ar
 export CMAKE_RANLIB=gcc-ranlib
 export CMAKE_NM=gcc-nm
 ## altflags1 end
-%scons_config O=3 O=3 --with-libelf --with-gettext --with-fiemap --with-blkid --with-json-glib --with-gui --prefix=%{?buildroot:%{buildroot}}%{_prefix} --actual-prefix=%{_prefix} --libdir=%{_lib}
+%scons_config O=3 V=1 VERBOSE=1 O=3 V=1 VERBOSE=1 --with-libelf --with-gettext --with-fiemap --with-blkid --with-json-glib --with-gui --prefix=%{?buildroot:%{buildroot}}%{_prefix} --actual-prefix=%{_prefix} --libdir=%{_lib}
+scons  %{?_smp_mflags}  O=3 V=1 VERBOSE=1 O=3 V=1 VERBOSE=1
 
 %install
-%scons_install O=3  %{?_smp_mflags}  O=3 V=1 VERBOSE=1 --prefix=%{?buildroot:%{buildroot}}%{_prefix} --actual-prefix=%{_prefix} --libdir=%{_lib}
+export GCC_IGNORE_WERROR=1
+## altflags1 content
+export CFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -fno-math-errno -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -fPIC"
+# -fno-PIE -fno-PIE -m64 -no-pie -fpic -fvisibility=hidden
+# gcc: -feliminate-unused-debug-types -fipa-pta -flto=16 -Wno-error -Wp,-D_REENTRANT -fno-common
+export CXXFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -fno-math-errno -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -fvisibility-inlines-hidden -pipe -fPIC"
+#
+export FCFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -fno-math-errno -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -fPIC"
+export FFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -fno-math-errno -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -fPIC"
+export CFFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -fno-math-errno -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -fPIC"
+#
+export LDFLAGS="-g -O3 --param=lto-max-streaming-parallelism=16 -march=native -mtune=native -fgraphite-identity -Wall -Wl,--as-needed -Wl,--build-id=sha1 -Wl,--enable-new-dtags -Wl,--hash-style=gnu -Wl,-O2 -Wl,-z,now -Wl,-z,relro -falign-functions=32 -fasynchronous-unwind-tables -fdevirtualize-at-ltrans -floop-nest-optimize -fno-math-errno -fno-stack-protector -fno-trapping-math -ftree-loop-distribute-patterns -ftree-loop-vectorize -ftree-vectorize -funroll-loops -fuse-ld=bfd -fuse-linker-plugin -malign-data=cacheline -feliminate-unused-debug-types -fipa-pta -flto=16 -mtls-dialect=gnu2 -Wl,-sort-common -Wno-error -Wp,-D_REENTRANT -pipe -fPIC"
+#
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+#export CCACHE_DISABLE=1
+export CMAKE_AR=gcc-ar
+export CMAKE_RANLIB=gcc-ranlib
+export CMAKE_NM=gcc-nm
+## altflags1 end
+%scons_install O=3 V=1 VERBOSE=1 O=3 V=1 VERBOSE=1 --prefix=%{?buildroot:%{buildroot}}%{_prefix} --actual-prefix=%{_prefix} --libdir=%{_lib}
 %find_lang rmlint
 
 %files

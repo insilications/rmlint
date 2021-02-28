@@ -1,6 +1,8 @@
 # This file contains additional build requirements that did not get
 # picked up automatically. One name per line, no whitespace.
 buildreq-scons
+compat-gtksourceview-soname3
+compat-gtksourceview-soname3-dev
 elfutils
 elfutils-dev
 fontconfig-dev
@@ -12,8 +14,13 @@ gobject-introspection
 gobject-introspection-dev
 gtk3
 gtk3-dev
+gtksourceview
+gtksourceview-dev
 json-glib
 json-glib-dev
+libgdiplus
+libgdiplus-dev
+libgdiplus-staticdev
 librsvg
 librsvg-dev
 pkg-config
